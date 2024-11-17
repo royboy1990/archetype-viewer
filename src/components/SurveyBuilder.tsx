@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Question } from '../types';
-import closeIcon from '../assets/close.png';
 
 interface SurveyBuilderProps {
     setQuestions: (q: Question[]) => void;
@@ -151,32 +150,34 @@ const SurveyBuilder: React.FC<SurveyBuilderProps> = ({
 
             <div className="mt-6">
                 <h2 className="text-xl font-semibold mb-4">Survey Preview</h2>
-                {questions.map((q) => (
-                    <div
-                        key={q.id}
-                        className="relative bg-gray-100 p-4 rounded-lg shadow-sm mb-4"
-                    >
-                        <div className="absolute top-2 right-2">
-                            <button
-                                onClick={() => removeQuestion(q.id)}
-                                className="w-4 h-4 bg-transparent"
-                                title="Remove Question"
-                            >
-                                <img
-                                    src={closeIcon}
-                                    alt="Remove"
-                                    className="w-full h-full object-contain"
-                                />
-                            </button>
-                        </div>
-                        <div className="flex">
-                            <p className="text-lg font-medium mr-1">{q.questionText} -</p>
-                            <p className="text-lg font-medium"> {q.type}</p>
-                        </div>
-
+                {questions.length === 0 ? (
+                    <div className="text-center p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+                        <p className="text-gray-500 text-lg">No questions added yet! Start building your survey.</p>
                     </div>
-                ))}
+                ) : (
+                    questions.map((q) => (
+                        <div
+                            key={q.id}
+                            className="relative bg-gray-100 p-4 rounded-lg shadow-sm mb-4"
+                        >
+                            <div className="absolute top-2 right-2">
+                                <button
+                                    onClick={() => removeQuestion(q.id)}
+                                    className="w-4 h-4 bg-transparent"
+                                    title="Remove Question"
+                                >
+                                    <span className="material-icons">close</span>
+                                </button>
+                            </div>
+                            <div className="flex">
+                                <p className="text-lg font-medium mr-1">{q.questionText} -</p>
+                                <p className="text-lg font-medium"> {q.type}</p>
+                            </div>
+                        </div>
+                    ))
+                )}
             </div>
+
         </div>
     );
 };
