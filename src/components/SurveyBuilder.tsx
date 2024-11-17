@@ -5,6 +5,7 @@ interface SurveyBuilderProps {
     setQuestions: (q: Question[]) => void;
     questions: Question[];
 }
+const MAX_LENGTH = 75; // Max length for question text
 
 const SurveyBuilder: React.FC<SurveyBuilderProps> = ({
                                                          setQuestions,
@@ -17,6 +18,7 @@ const SurveyBuilder: React.FC<SurveyBuilderProps> = ({
     const [options, setOptions] = useState<string[]>([]);
     const [required, setRequired] = useState(false);
     const [touched, setTouched] = useState(false); // Tracks if question has been touched for validation
+
 
     const isAddQuestionDisabled =
         !questionText.trim() ||
@@ -72,6 +74,7 @@ const SurveyBuilder: React.FC<SurveyBuilderProps> = ({
                     value={questionText}
                     onChange={(e) => setQuestionText(e.target.value)}
                     onBlur={handleBlur} // Track if the field was interacted with
+                    maxLength={MAX_LENGTH}
                     className={`mt-2 p-2 border rounded w-full ${
                         touched && !questionText.trim() ? 'border-red-500 animate-shake' : 'border-gray-300'
                     }`}
@@ -79,6 +82,13 @@ const SurveyBuilder: React.FC<SurveyBuilderProps> = ({
                 />
                 {touched && !questionText.trim() && (
                     <p className="text-red-500 text-sm mt-1">Question text cannot be empty.</p>
+                )}
+                {questionText.length > 0 && (
+                    <div className="text-right text-sm mt-1">
+                        <span className={questionText.length > MAX_LENGTH ? 'text-red-500' : 'text-gray-500'}>
+                            {questionText.length}/{MAX_LENGTH}
+                        </span>
+                    </div>
                 )}
             </div>
 
