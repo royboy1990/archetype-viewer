@@ -7,6 +7,7 @@ import { Question } from './types';
 const App: React.FC = () => {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [preview, setPreview] = useState(false);
+    const [loading, setLoading] = useState(false); // Add loading state
 
     useEffect(() => {
         const savedQuestions = localStorage.getItem('survey-questions');
@@ -18,6 +19,14 @@ const App: React.FC = () => {
     useEffect(() => {
         localStorage.setItem('survey-questions', JSON.stringify(questions));
     }, [questions]);
+
+    const toggleView = () => {
+        setLoading(true);
+        setTimeout(() => {
+            setPreview(!preview);
+            setLoading(false);
+        }, 300);
+    };
 
     const exportSurvey = () => {
         const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
@@ -56,13 +65,8 @@ const App: React.FC = () => {
         reader.readAsText(file);
     };
 
-    const toggleView = () => {
-        setPreview(!preview);
-    };
-
     return (
         <div className="min-h-screen bg-gray-50 text-gray-800">
-            {/* Header Component */}
             <Header
                 toggleView={toggleView}
                 preview={preview}
@@ -71,7 +75,12 @@ const App: React.FC = () => {
             />
 
             <main className="container mx-auto py-8 px-6 flex justify-center">
-                {!preview ? (
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center w-screen  h-[calc(100vh-138px)]">
+                        <div className="loader border-t-4 border-blue-500 rounded-full w-8 h-8 animate-spin"></div>
+                        <p className="mt-2 text-blue-500">Loading...</p>
+                    </div>
+                ) : !preview ? (
                     <SurveyBuilder setQuestions={setQuestions} questions={questions} />
                 ) : (
                     <SurveyViewer questions={questions} />
